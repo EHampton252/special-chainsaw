@@ -1,0 +1,40 @@
+# Runs offline with no API keys: agenteval run examples/quickstart/suite.yaml
+name: quickstart-support-agent
+description: A toy in-process agent, graded with free deterministic checks only.
+
+target:
+  type: python
+  callable: agent.py:respond
+
+# Applied to every case.
+defaults:
+  graders:
+    - not_empty
+    - latency: 2000
+
+# Cases can live in this file, in datasets, or both.
+dataset:
+  - cases.jsonl
+  - cases/*.md
+
+cases:
+  - id: order-status-uses-lookup-tool
+    input: Where is order 1001?
+    tags: [orders, tools]
+    graders:
+      - contains: shipped
+      - tool_calls:
+          expected:
+            - name: lookup_order
+              args: { order_id: "1001" }
+          mode: strict
+
+  - id: follow-up-remembers-order
+    tags: [orders, multi-turn]
+    turns:
+      - input: Where is order 1002?
+        graders:
+          - contains: processing
+      - input: Can I still return it?
+        graders:
+          - contains: ["order 1002", "30 days"]

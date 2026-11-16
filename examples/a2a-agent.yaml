@@ -1,0 +1,15 @@
+# Any agent that speaks the Agent2Agent protocol, whatever platform hosts it.
+# The agent card is discovered at <url>/.well-known/agent-card.json (protocol 1.0 and 0.3 both work).
+name: a2a-agent
+
+target:
+  type: a2a
+  url: https://agent.example.com
+  headers:
+    Authorization: "Bearer ${A2A_TOKEN}"
+
+cases:
+  - id: answers-a-question
+    input: What can you help me with?
+    graders:
+      - not_empty

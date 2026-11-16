@@ -1,0 +1,2 @@
+{"id": "refund-window", "query": "What is your refund policy?", "ground_truth": "You can return any item within 30 days of delivery for a full refund.", "graders": [{"similarity": 0.8}, {"contains": "30 days"}], "tags": ["returns"]}
+{"id": "unknown-order", "query": "Where is order 9999?", "expected_tools": ["lookup_order"], "graders": [{"contains": "not found"}], "tags": ["orders", "tools"]}

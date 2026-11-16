@@ -1,0 +1,24 @@
+# A local model as the agent and as the judge, so the whole run costs nothing.
+# Works with any OpenAI-compatible server: Ollama, LM Studio, vLLM, llama.cpp.
+name: local-model
+
+target:
+  type: openai
+  base_url: http://localhost:11434/v1
+  model: llama3.1
+  api_key_env: null
+  system: You are a concise support assistant for an online shop. Returns are accepted within 30 days.
+
+judge:
+  model: llama3.1
+  base_url: http://localhost:11434/v1
+  api_key_env: null
+
+cases:
+  - id: refund-policy
+    input: How long do I have to return something?
+    expected: Items can be returned within 30 days.
+    graders:
+      - contains: "30"       # free check runs first; the judge is skipped if it fails
+      - correctness
+      - rubric: The reply is polite and no longer than three sentences.

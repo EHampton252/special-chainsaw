@@ -1,0 +1,21 @@
+# Any agent behind a REST endpoint: a local FastAPI/LangGraph/CrewAI server, or a hosted one.
+name: http-agent
+
+target:
+  type: http
+  url: http://localhost:8000/chat
+  headers:
+    Authorization: "Bearer ${AGENT_API_KEY}"   # read from the environment at run time
+  body:
+    message: "{{input}}"          # the new user message
+    history: "{{messages}}"       # the whole conversation, OpenAI-style
+    session_id: "{{session_id}}"  # stable for all turns of one case
+  response_path: reply            # where the reply text is in the JSON response
+  tool_calls_path: tool_calls     # optional: where the agent reports its tool calls
+
+cases:
+  - id: greets-user
+    input: Hello!
+    graders:
+      - not_empty
+      - not_contains: ["error", "exception"]

@@ -1,0 +1,16 @@
+# Reuses a Copilot Studio test set as-is (conversationNumber,question,response).
+# Rows that share a conversationNumber become one multi-turn case. Because the rows only carry
+# expected answers, each turn is graded for correctness by the judge.
+name: copilot-studio-test-set
+
+target:
+  type: http
+  url: http://localhost:8000/chat
+  body: { message: "{{input}}", session_id: "{{session_id}}" }
+  response_path: reply
+
+judge:
+  model: gpt-4.1-mini
+  # api_key_env: OPENAI_API_KEY   (the default)
+
+dataset: test-set.csv
